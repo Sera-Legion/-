@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра с цветами 4x4</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #18181b;
+            color: white;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(4, 80px);
+            grid-template-rows: repeat(4, 80px);
+            gap: 5px;
+            border: 2px solid white;
+            padding: 10px;
+            border-radius: 10px;
+            background-image: url('2/22.png'); /* Фоновая картинка для игрового поля */
+            background-size: cover; /* Заставляем картинку занимать всю площадь */
+        }
+        .cell {
+            width: 80px;
+            height: 80px;
+            background-color: #292929; /* Исходный цвет фона ячейки */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 5px;
+            position: relative;
+            transition: background-color 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.5); /* Граница для ячеек */
+        }
+        .hidden {
+            background-color: #292929; /* Скрытый цвет ячейки */
+        }
+        .matched {
+            visibility: hidden; /* Скрываем совпавшие ячейки */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="board" id="board"></div>
+
+    <script>
+        const colors = [
+            '#ff5733', '#33ff57', '#3357ff', '#f1c40f',
+            '#8e44ad', '#e67e22', '#e74c3c', '#2ecc71'
+        ];
+
+        let board = [];
+        let firstCell = null;
+        let secondCell = null;
+
+        function createBoard() {
+            const randomizedColors = [...colors, ...colors]; // Дублируем массив цветов
+            const shuffledColors = randomizedColors.sort(() => 0.5 - Math.random()); // Перемешиваем цвета
+
+            for (let i = 0; i < 16; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell', 'hidden');
+                cell.dataset.color = shuffledColors[i];
+
+                cell.addEventListener('click', () => handleCellClick(cell));
+                board.push(cell);
+                document.getElementById('board').appendChild(cell);
+            }
+        }
+
+        function handleCellClick(cell) {
+            if (cell.classList.contains('hidden')) {
+                cell.style.backgroundColor = cell.dataset.color; // Меняем цвет на цвет ячейки
+                cell.classList.remove('hidden');
+
+                if (!firstCell) {
+                    firstCell = cell;
+                } else {
+                    secondCell = cell;
+                    checkMatch();
+                }
+            }
+        }
+
+        function checkMatch() {
+            if (firstCell.dataset.color === secondCell.dataset.color) {
+                // Если цвета совпадают, скрываем ячейки
+                setTimeout(() => {
+                    firstCell.classList.add('matched'); // Скрываем первую ячейку
+                    secondCell.classList.add('matched'); // Скрываем вторую ячейку
+                    firstCell = null;
+                    secondCell = null;
+                }, 500); // Задержка перед скрытием для визуального эффекта
+            } else {
+                // Если цвета разные, закрываем их через 1 секунду
+                setTimeout(() => {
+                    firstCell.style.backgroundColor = '#292929'; // Возвращаем исходный цвет
+                    secondCell.style.backgroundColor = '#292929'; // Возвращаем исходный цвет
+                    firstCell.classList.add('hidden');
+                    secondCell.classList.add('hidden');
+                    firstCell = null;
+                    secondCell = null;
+                }, 1000);
+            }
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>
