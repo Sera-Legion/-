@@ -1,4 +1,55 @@
-    <script>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра с цветами 4x4</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #18181b;
+            color: white;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(4, 80px);
+            grid-template-rows: repeat(4, 80px);
+            gap: 5px;
+            border: 2px solid white;
+            padding: 10px;
+            border-radius: 10px;
+            background-image: url('2/22.png'); /* Фоновая картинка для игрового поля */
+            background-size: cover; /* Заставляем картинку занимать всю площадь */
+        }
+        .cell {
+            width: 80px;
+            height: 80px;
+            background-color: #292929; /* Исходный цвет фона ячейки */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 5px;
+            position: relative;
+            transition: background-color 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.5); /* Граница для ячеек */
+        }
+        .hidden {
+            background-color: #292929; /* Скрытый цвет ячейки */
+        }
+        .matched {
+            visibility: hidden; /* Скрываем совпавшие ячейки */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="board" id="board"></div>
+
+ <script>
         const colors = [
             '#ff5733', '#33ff57', '#3357ff', '#f1c40f',
             '#8e44ad', '#e67e22', '#e74c3c', '#2ecc71'
@@ -107,3 +158,8 @@ document.getElementById('restartButton').addEventListener('click', () => {
     document.getElementById('restartButton').style.display = 'none'; // Скрываем кнопку перезапуска
 });
         createBoard();
+
+
+    </script>
+</body>
+</html>
