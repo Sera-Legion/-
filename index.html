@@ -75,7 +75,7 @@
         }
 
         function handleCellClick(cell) {
-            if (cell.classList.contains('hidden')) {
+            if (cell.classList.contains('hidden') && !isChecking) {
                 cell.style.backgroundColor = cell.dataset.color; // Меняем цвет на цвет ячейки
                 cell.classList.remove('hidden');
 
@@ -89,24 +89,34 @@
         }
 
         function checkMatch() {
+            isChecking = true; // Блокируем клики
+
             if (firstCell.dataset.color === secondCell.dataset.color) {
-                // Если цвета совпадают, скрываем ячейки
                 setTimeout(() => {
-                    firstCell.classList.add('matched'); // Скрываем первую ячейку
-                    secondCell.classList.add('matched'); // Скрываем вторую ячейку
+                    firstCell.classList.add('matched');
+                    secondCell.classList.add('matched');
+                    matchedPairs++;
                     firstCell = null;
                     secondCell = null;
-                }, 500); // Задержка перед скрытием для визуального эффекта
+
+                    // Проверяем, завершена ли игра
+                    if (matchedPairs === totalPairs) {
+                        alert("Поздравляем, вы выиграли! 🎉");
+                        document.getElementById('victorySound').play(); // Воспроизводим звук победы
+                    }
+
+                    isChecking = false; // Разблокируем клики
+                }, 500);
             } else {
-                // Если цвета разные, закрываем их через 1 секунду
                 setTimeout(() => {
-                    firstCell.style.backgroundColor = '#292929'; // Возвращаем исходный цвет
-                    secondCell.style.backgroundColor = '#292929'; // Возвращаем исходный цвет
+                    firstCell.style.backgroundColor = '#292929';
+                    secondCell.style.backgroundColor = '#292929';
                     firstCell.classList.add('hidden');
                     secondCell.classList.add('hidden');
                     firstCell = null;
                     secondCell = null;
-                }, 2000);
+                    isChecking = false; // Разблокируем клики
+                }, 1000);
             }
         }
 
