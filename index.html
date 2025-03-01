@@ -34,7 +34,7 @@
             cursor: pointer;
             border-radius: 5px;
             position: relative;
-            transition: background-color 0.3s easy;
+            transition: background-color 0.3s;
             border: 2px solid rgba(255, 255, 255, 0.5); /* Граница для ячеек */
         }
         .hidden {
@@ -49,7 +49,7 @@
 
     <div class="board" id="board"></div>
 
- <script>
+    <script>
         const colors = [
             '#ff5733', '#33ff57', '#3357ff', '#f1c40f',
             '#8e44ad', '#e67e22', '#e74c3c', '#2ecc71'
@@ -58,13 +58,10 @@
         let board = [];
         let firstCell = null;
         let secondCell = null;
-        let matchedPairs = 0; // Счетчик совпадений
-        const totalPairs = colors.length; // Общее количество пар
-        let isChecking = false; // Переменная для блокировки кликов
 
         function createBoard() {
-            const randomizedColors = [...colors, ...colors];
-            const shuffledColors = randomizedColors.sort(() => 0.5 - Math.random());
+            const randomizedColors = [...colors, ...colors]; // Дублируем массив цветов
+            const shuffledColors = randomizedColors.sort(() => 0.5 - Math.random()); // Перемешиваем цвета
 
             for (let i = 0; i < 16; i++) {
                 const cell = document.createElement('div');
@@ -78,7 +75,7 @@
         }
 
         function handleCellClick(cell) {
-            if (cell.classList.contains('hidden') && !isChecking) {
+            if (cell.classList.contains('hidden')) {
                 cell.style.backgroundColor = cell.dataset.color; // Меняем цвет на цвет ячейки
                 cell.classList.remove('hidden');
 
@@ -92,74 +89,28 @@
         }
 
         function checkMatch() {
-            isChecking = true; // Блокируем клики
-
             if (firstCell.dataset.color === secondCell.dataset.color) {
+                // Если цвета совпадают, скрываем ячейки
                 setTimeout(() => {
-                    firstCell.classList.add('matched');
-                    secondCell.classList.add('matched');
-                    matchedPairs++;
+                    firstCell.classList.add('matched'); // Скрываем первую ячейку
+                    secondCell.classList.add('matched'); // Скрываем вторую ячейку
                     firstCell = null;
                     secondCell = null;
-
-                    // Проверяем, завершена ли игра
-                    if (matchedPairs === totalPairs) {
-                        alert("Поздравляем, вы выиграли! 🎉");
-                        document.getElementById('victorySound').play(); // Воспроизводим звук победы
-                    }
-
-                    isChecking = false; // Разблокируем клики
-                }, 500);
+                }, 500); // Задержка перед скрытием для визуального эффекта
             } else {
+                // Если цвета разные, закрываем их через 1 секунду
                 setTimeout(() => {
-                    firstCell.style.backgroundColor = '#292929';
-                    secondCell.style.backgroundColor = '#292929';
+                    firstCell.style.backgroundColor = '#292929'; // Возвращаем исходный цвет
+                    secondCell.style.backgroundColor = '#292929'; // Возвращаем исходный цвет
                     firstCell.classList.add('hidden');
                     secondCell.classList.add('hidden');
                     firstCell = null;
                     secondCell = null;
-                    isChecking = false; // Разблокируем клики
-                }, 1000);
+                }, 2000);
             }
         }
 
-
-        function startTimer() {
-    timer = setInterval(() => {
-        timeLeft--;
-        document.getElementById('time').textContent = timeLeft;
-
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            alert("Время вышло! Игра окончена. ⏰");
-            showRestartButton(); // Показываем кнопку перезапуска
-        }
-    }, 1000);
-}
-
-
-function showRestartButton() {
-    document.getElementById('restartButton').style.display = 'block';
-}
-
-document.getElementById('restartButton').addEventListener('click', () => {
-    // Сбросьте все необходимые переменные и перезапустите игру
-    matchedPairs = 0;
-    timeLeft = 60;
-    document.getElementById('time').textContent = timeLeft;
-    board = [];
-    firstCell = null;
-    secondCell = null;
-    isChecking = false;
-
-    // Удалите старые ячейки
-    document.getElementById('board').innerHTML = '';
-    createBoard(); // Создайте новую доску
-    document.getElementById('restartButton').style.display = 'none'; // Скрываем кнопку перезапуска
-});
         createBoard();
-
-
     </script>
 </body>
 </html>
